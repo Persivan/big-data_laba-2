@@ -9,7 +9,7 @@ rows = [
     (2, 'Материал4', 15.0, 8.0, 0.2, 0.5),
     (3, 'Материал5', 14.0, 7.0, 0.3, 0.7),
 ]
-conn = sqlite3.connect(self.db_name)
+conn = sqlite3.connect("fucking_bd")
 cur = conn.cursor()
 cur.execute("""CREATE TABLE Materials
             (ID INTEGER NOT NULL PRIMARY KEY
