@@ -19,15 +19,13 @@ from PIL import Image
 # img2.show()
 
 # Преобразуйте изображение RGB в формат P, указав смешивание цветов и адаптивную палитру в 128 цветов.
-# img = Image.open("assets/img1.jpg")
-# print(img.mode)
-# img2 = img.convert("P", None, Image.FLOYDSTEINBERG, Image.ADAPTIVE, 128)
-# print(img2.mode)
-# img2.show()
-
-# Сохраняем (не проверил, работает ли)
-# img2.save("assets/img2.png") # Сохраняем
-# img2.save("assets/img2.bmp", "BMP") # Сохраняем
-# f = open("assets/img1.jpg", "wb")
-# img.save(f, format="BMP")
-# f.close()
+img = Image.open("assets/img1.jpg")
+print(img.mode)
+img2 = img.convert("P", None, Image.FLOYDSTEINBERG, Image.ADAPTIVE, 128)
+print(img2.mode)
+img2.show()
+img2.save("output/img2.png") # Сохраняем
+# img2.save("output/img2.bmp", "BMP") # Сохраняем
+f = open("assets/img1.jpg", "wb")
+img.save(f, format="BMP")
+f.close()

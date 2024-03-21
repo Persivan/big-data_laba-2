@@ -34,7 +34,7 @@ from PIL import Image
 # for x in range(640):
 #  for y in range(480):
 #    img.putpixel((x,y),(0,160,0))
-# img.save("okno.png", "PNG")
+# img.save("output/okno.png", "PNG")
 # img.show() # зеленый прямоугольник
 
 # 10. Создайте прямоугольник заданного цвета (функциональная раскраска).
@@ -43,7 +43,7 @@ img.show() # сиреневый прямоугольник
 for x in range(640):
  for y in range(480):
    img.putpixel((x,y),(int(x/3),int((x+y)/6),int(y/3)))
-img.save("okno.png", "PNG")
+img.save("output/okno2.png", "PNG")
 img.show() # прямоугольник с функциональной раскраской
 
 

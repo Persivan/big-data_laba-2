@@ -10,10 +10,15 @@ from PIL import Image
 # img4 = img.rotate(45, expand=True)
 # print(img4.size)
 
+
 img = Image.open("assets/img1.jpg")
 img2 = img.transpose(Image.FLIP_LEFT_RIGHT)
 img2.show()
 img3 = img.transpose(Image.FLIP_TOP_BOTTOM)
 img3.show()
+img4 = img.transpose(Image.ROTATE_90)
+img4.show()
+img5 = img.transpose(Image.ROTATE_180)
+img5.show()
 
 
