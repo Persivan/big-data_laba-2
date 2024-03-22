@@ -32,6 +32,7 @@ class Ui_Dialog(object):
         self.text_edit_material_porous_std.setGeometry(QtCore.QRect(550, 30, 101, 31))
         self.text_edit_material_porous_std.setObjectName("text_edit_material_porous_std")
         self.btnAddRow = QtWidgets.QPushButton(self.groupBox)
+        self.btnAddRow.clicked.connect(self.push_button_add_click)
         self.btnAddRow.setGeometry(QtCore.QRect(700, 30, 141, 41))
         self.btnAddRow.setObjectName("btnAddRow")
         self.groupBox_2 = QtWidgets.QGroupBox(Dialog)
@@ -43,6 +44,7 @@ class Ui_Dialog(object):
         self.btnDeleteRow = QtWidgets.QPushButton(self.groupBox_2)
         self.btnDeleteRow.setGeometry(QtCore.QRect(700, 20, 141, 41))
         self.btnDeleteRow.setObjectName("btnDeleteRow")
+        self.btnDeleteRow.clicked.connect(self.push_button_delete_click)
         self.btnOK = QtWidgets.QPushButton(Dialog)
         self.btnOK.setGeometry(QtCore.QRect(770, 380, 101, 31))
         self.btnOK.setObjectName("btnOK")
@@ -97,15 +99,18 @@ class Ui_Dialog(object):
         item.setText(_translate("Dialog", "Пористость"))
         item = self.tableWidget.horizontalHeaderItem(5)
         item.setText(_translate("Dialog", "Откл. от пористости"))
+        self.load_materials()
 
     def push_button_add_click(self):
         print(1)
-        material_name = self.text_edit_material_name.toPlainText()
-        material_area = self.text_edit_material_area.toPlainText()
-        material_area_std = self.text_edit_material_area_std.toPlainText()
-        material_porous = self.text_edit_material_porous.toPlainText()
-        material_porous_std = self.text_edit_material_porous_std.toPlainText()
+        material_name = self.text_edit_material_name.text()
+        print(material_name)
+        material_area = self.text_edit_material_area.text()
+        material_area_std = self.text_edit_material_area_std.text()
+        material_porous = self.text_edit_material_porous.text()
+        material_porous_std = self.text_edit_material_porous_std.text()
         data = [material_name, material_area, material_area_std, material_porous, material_porous_std]
+        print(data)
         flag = [True if (m is not None and m != '') else False for m in data]
         if flag:
             try:
@@ -129,7 +134,7 @@ class Ui_Dialog(object):
 
     def push_button_delete_click(self):
         print(3)
-        index = self.text_edit_material_id.toPlainText()
+        index = self.text_edit_material_id.text()
         try:
             index = int(index) - 1
             if 0 <= index <= len(self.materials) - 1:
@@ -144,52 +149,51 @@ class Ui_Dialog(object):
                 self.fill_table()
         except Exception as e:
             print(e)
-        self.text_edit_material_id.setPlainText('')
-        self.text_edit_material_id.clear()
 
-    # def fill_table(self):
-    #     conn = sqlite3.connect("fucking_bd")
-    #     cur = conn.cursor()
-    #
-    #     results = cur.execute("SELECT * FROM Materials;").fetchall()
-    #     conn.close()
-    #
-    #     rows = len(results)
-    #     columns = len(results[0])
-    #     self.tableWidget.setRowCount(rows)
-    #     self.tableWidget.setColumnCount(columns)
-    #
-    #     for i in range(rows):
-    #         for j in range(columns):
-    #             item = QtWidgets.QTableWidgetItem("{}".format(results[i][j]))
-    #             # item.setTextAlignment(Qt.AlignHCenter)
-    #             self.tableWidget.setItem(i, j, item)
-    #
-    # def load_materials(self):
-    #     conn = sqlite3.connect("fucking_bd")
-    #     cur = conn.cursor()
-    #
-    #     materials = cur.execute("SELECT * FROM Materials;").fetchall()
-    #     conn.close()
-    #
-    #     self.cmbxMaterialName.clear()
-    #     for row in materials
-    #         self.cmbxMaterialName.addItem(row[1])
-    #
-    # def set_material_values(self):
-    #     conn = sqlite3.connect("fucking_bd")
-    #     cur = conn.cursor()
-    #
-    #     materials = cur.execute("SELECT * FROM Materials;").fetchall()
-    #     conn.close()
-    #
-    #     currentMaterial = self.cmbxMaterialName.currentText()
-    #     for material in materials:
-    #         if material[1] == currentMaterial:
-    #             self.label_pore_area.setText(str(material[2]))
-    #             self.label_pore_area_std.setText(str(material[3]))
-    #             self.label_porous.setText(str(material[5]))
-    #             self.label_porous_std.setText(str(material[4]))
+    def fill_table(self):
+        conn = sqlite3.connect("fucking_bd")
+        cur = conn.cursor()
+
+        results = cur.execute("SELECT * FROM Materials;").fetchall()
+        conn.close()
+
+        rows = len(results)
+        columns = len(results[0])
+        self.tableWidget.setRowCount(rows)
+        self.tableWidget.setColumnCount(columns)
+
+        for i in range(rows):
+            for j in range(columns):
+                item = QtWidgets.QTableWidgetItem("{}".format(results[i][j]))
+                # item.setTextAlignment(Qt.AlignHCenter)
+                self.tableWidget.setItem(i, j, item)
+
+    def load_materials(self):
+        print('load_materials')
+        conn = sqlite3.connect("fucking_bd")
+        cur = conn.cursor()
+
+        self.materials = cur.execute("SELECT * FROM Materials;").fetchall()
+        conn.close()
+
+        print(self.materials)
+
+        self.fill_table()  # Call fill_table to populate tableWidget
+
+    def set_material_values(self):
+        conn = sqlite3.connect("fucking_bd")
+        cur = conn.cursor()
+
+        self.materials = cur.execute("SELECT * FROM Materials;").fetchall()
+        conn.close()
+
+        currentMaterial = self.cmbxMaterialName.text()
+        # for material in self.materials:
+        #     if material[1] == currentMaterial:
+        #         self.label_pore_area.setText(str(material[2]))
+        #         self.label_pore_area_std.setText(str(material[3]))
+        #         self.label_porous.setText(str(material[5]))
+        #         self.label_porous_std.setText(str(material[4]))
 
 if __name__ == "__main__":
     import sys
