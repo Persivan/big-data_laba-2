@@ -70,6 +70,7 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
+        print(2)
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.groupBox.setTitle(_translate("Dialog", "Добавить запись"))
@@ -98,47 +99,97 @@ class Ui_Dialog(object):
         item.setText(_translate("Dialog", "Откл. от пористости"))
 
     def push_button_add_click(self):
-     material_name = self.text_edit_material_name.toPlainText()
-     material_area = self.text_edit_material_area.toPlainText()
-     material_area_std = self.text_edit_material_area_std.toPlainText()
-     material_porous = self.text_edit_material_porous.toPlainText()
-     material_porous_std = self.text_edit_material_porous_std.toPlainText()
-     data = [material_name, material_area, material_area_std, material_porous, material_porous_std]
-     flag = [True if (m is not None and m != '') else False for m in data ]
-     if flag:
-         try:
-            material_area = float(material_area)
-            material_area_std = float(material_area_std)
-            material_porous = float(material_porous)
-            material_porous_std = float(material_porous_std)
-            connect = sqlite3.connect(self.db_name) #fucking_bd
-            crsr = connect.cursor()
-            crsr.execute("""INSERT INTO Materials(NAME,
+        print(1)
+        material_name = self.text_edit_material_name.toPlainText()
+        material_area = self.text_edit_material_area.toPlainText()
+        material_area_std = self.text_edit_material_area_std.toPlainText()
+        material_porous = self.text_edit_material_porous.toPlainText()
+        material_porous_std = self.text_edit_material_porous_std.toPlainText()
+        data = [material_name, material_area, material_area_std, material_porous, material_porous_std]
+        flag = [True if (m is not None and m != '') else False for m in data]
+        if flag:
+            try:
+                material_area = float(material_area)
+                material_area_std = float(material_area_std)
+                material_porous = float(material_porous)
+                material_porous_std = float(material_porous_std)
+                # connect = sqlite3.connect(self.db_name) # fucking_bd
+                connect = sqlite3.connect("fucking_bd")  # fucking_bd
+                crsr = connect.cursor()
+                crsr.execute("""INSERT INTO Materials(NAME,
             PORE_AREA_MEAN, PORE_AREA_STD, POROUS_MEAN, POROUS_STD)
-            VALUES (?,?,?,?,?)""", (material_name, material_area, material_area_std, material_porous, material_porous_std))
-            connect.commit()
-            connect.close()
-            self.load_materials()
-            self.fill_table()
-         except Exception as e: (print(e))
+            VALUES (?,?,?,?,?)""",
+                             (material_name, material_area, material_area_std, material_porous, material_porous_std))
+                connect.commit()
+                connect.close()
+                self.load_materials()
+                self.fill_table()
+            except Exception as e:
+                (print(e))
 
-     def push_button_delete_click(self):
-         index = self.text_edit_material_id.toPlainText()
-         try:
-             index = int(index) - 1
-             if 0 <= index <= len(self.materials)-1:
-                 connect = sqlite3.connect(self.db_name)
-                 crsr = connect.cursor()
-                 row = self.materials.pop(index)
-                 id = row[0]
-                 crsr.execute('DELETE FROM Materials WHERE ID=?',(id,))
-                 connect.commit()
-                 connect.close()
-                 self.load_materials()
-                 self.fill_table()
-         except Exception as e: print(e)
-         self.text_edit_material_id.setPlainText('')
-         self.text_edit_material_id.clear()
+    def push_button_delete_click(self):
+        print(3)
+        index = self.text_edit_material_id.toPlainText()
+        try:
+            index = int(index) - 1
+            if 0 <= index <= len(self.materials) - 1:
+                connect = sqlite3.connect("fucking_bd")
+                crsr = connect.cursor()
+                row = self.materials.pop(index)
+                id = row[0]
+                crsr.execute('DELETE FROM Materials WHERE ID=?', (id,))
+                connect.commit()
+                connect.close()
+                self.load_materials()
+                self.fill_table()
+        except Exception as e:
+            print(e)
+        self.text_edit_material_id.setPlainText('')
+        self.text_edit_material_id.clear()
+
+    # def fill_table(self):
+    #     conn = sqlite3.connect("fucking_bd")
+    #     cur = conn.cursor()
+    #
+    #     results = cur.execute("SELECT * FROM Materials;").fetchall()
+    #     conn.close()
+    #
+    #     rows = len(results)
+    #     columns = len(results[0])
+    #     self.tableWidget.setRowCount(rows)
+    #     self.tableWidget.setColumnCount(columns)
+    #
+    #     for i in range(rows):
+    #         for j in range(columns):
+    #             item = QtWidgets.QTableWidgetItem("{}".format(results[i][j]))
+    #             # item.setTextAlignment(Qt.AlignHCenter)
+    #             self.tableWidget.setItem(i, j, item)
+    #
+    # def load_materials(self):
+    #     conn = sqlite3.connect("fucking_bd")
+    #     cur = conn.cursor()
+    #
+    #     materials = cur.execute("SELECT * FROM Materials;").fetchall()
+    #     conn.close()
+    #
+    #     self.cmbxMaterialName.clear()
+    #     for row in materials
+    #         self.cmbxMaterialName.addItem(row[1])
+    #
+    # def set_material_values(self):
+    #     conn = sqlite3.connect("fucking_bd")
+    #     cur = conn.cursor()
+    #
+    #     materials = cur.execute("SELECT * FROM Materials;").fetchall()
+    #     conn.close()
+    #
+    #     currentMaterial = self.cmbxMaterialName.currentText()
+    #     for material in materials:
+    #         if material[1] == currentMaterial:
+    #             self.label_pore_area.setText(str(material[2]))
+    #             self.label_pore_area_std.setText(str(material[3]))
+    #             self.label_porous.setText(str(material[5]))
+    #             self.label_porous_std.setText(str(material[4]))
 
 if __name__ == "__main__":
     import sys
